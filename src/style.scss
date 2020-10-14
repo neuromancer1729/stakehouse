@@ -1,0 +1,32 @@
+.mainModal{
+        display:block;
+        width:100%;
+    .WalletFunds{
+        text-align: center;
+        margin-top: 50px;
+        .wallet-header{
+            margin-bottom: 13px;
+            display:block;
+            font-size: 20px;
+        }
+        .wallet-amount{
+            margin-bottom: 10px;
+            display:block;
+            font-size: 30px;
+        }
+    }
+    .AddFunds{
+        margin-top: 50px;
+        margin-left: 20px;
+        .addFunds-header{
+            margin-bottom: 10px;
+            display:block;
+            font-size: 15px;
+        }
+        .addFunds-buttons{
+            .addFunds-crypto{
+                margin-right:30px;
+            }
+        }
+    }
+}
