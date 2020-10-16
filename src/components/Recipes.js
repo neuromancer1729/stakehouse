@@ -19,7 +19,11 @@ const Recipes = ({
   recipes,
   setSelectedRecipe,
   openModal,
-  openFilterModal,
+  openProfileModal,
+  openSettingModal,
+  openLoginModal,
+  isLoggedin,
+  logout,
   filter,
   isMobile,
 }) => {
@@ -50,12 +54,24 @@ const Recipes = ({
           name: 'Options',
           list: (
             <List>
-              <List.Item onClick={() => openFilterModal(true)}>
+              <List.Item onClick={() => openProfileModal()}>
                 Profile
               </List.Item>
-              <List.Item onClick={() => openFilterModal(true)}>
+              <List.Item onClick={() => openSettingModal(true)}>
                 Settings
               </List.Item>
+              { !isLoggedin && (
+              <List.Item onClick={() => openLoginModal(true)}>
+                Login
+              </List.Item>)
+              }
+              { isLoggedin && (
+                <List.Item onClick={() => logout()}> 
+                Logout
+                </List.Item>
+              )
+
+              }
             </List>
           ),
         },

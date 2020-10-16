@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
-import styled, { createGlobalStyle } from '@xstyled/styled-components';
+import  { createGlobalStyle } from '@xstyled/styled-components';
 import { TaskBar } from '@react95/core';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import 'react-medium-image-zoom/dist/styles.css';
 import '../src/style.scss'
+import Portis from '@portis/web3';
+import Web3 from 'web3';
 
-import { Recipes, IngredientsModal, RecipeModal, TaskList } from './components';
+import { Recipes, RecipeModal, TaskList, LoginModal, ProfileModal } from './components';
 import { useRecipes } from './components/RecipeContext';
+import SettingsModal from './components/SettingsModal';
 
 const isMobile =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent,
   ) || window.innerWidth < 500;
 
-const Hero = styled.h1`
-  font-size: 40px;
-  width: 100%;
-  text-align: center;
-`;
+  
 
 const Style = createGlobalStyle`
   body {
@@ -31,13 +30,70 @@ function App() {
     allIngredients,
     selectedRecipe,
     setSelectedRecipe,
-    setAllIngredients,
     sheetId,
     updateRecipes,
   } = useRecipes();
 
+  const portis = new Portis('72f8e659-ecc9-4a33-8357-c66bd3f71685', 'mainnet');
+  const web3 = new Web3(portis.provider);
+  const [isLoggedin, setLogin] = useState(false);
+
   const [showModal, toggleModal] = useState(false);
-  const [showFilterModal, toggleFilterModal] = useState(false);
+  const [showProfileModal, toggleProfileModal] = useState(false);
+  const [showLoginModal, toggleLoginModal] = useState(false);
+  const [showSettingModal, toggleSettingModal] = useState(false);
+  const [balance, setBalance] = useState(0);
+
+
+  function openProfileModal(){
+    if(isLoggedin) {
+       toggleProfileModal(true); }
+       else {
+         toggleLoginModal(true);
+       }
+
+  }
+
+function isUserLoggedIn() {
+  portis.isLoggedIn().then(({ error, result }) => {
+    setLogin(result);
+    getAccounts();
+  });
+ return isLoggedin; 
+}
+
+  function loginToPortis(){
+    portis.provider.enable();
+  }
+
+  function logout(){
+    portis.logout();
+    setLogin(false);
+  }
+
+  portis.onLogin((walletAddress) => {
+    toggleLoginModal(false);
+    setLogin(true);
+    getAccounts();
+    
+  })
+
+  function getAccounts(){
+    web3.eth.getAccounts((error, accounts) => {
+      checkBalance(accounts[0]);  
+    });
+  }
+
+  async function checkBalance(account) {
+    const balance = await web3.eth.getBalance(account);
+    setBalance(balance);
+  }
+
+  portis.onLogout((walletAddress) => {
+    setLogin(false);
+  })
+
+
 
   function openModal() {
     toggleModal(true);
@@ -59,7 +115,11 @@ function App() {
             recipes={recipes}
             openModal={openModal}
             setSelectedRecipe={setSelectedRecipe}
-            openFilterModal={toggleFilterModal}
+            openProfileModal={openProfileModal}
+            openSettingModal={toggleSettingModal}
+            openLoginModal={toggleLoginModal}
+            isLoggedin={isLoggedin}
+            logout={logout}
             filter={filter}
             isMobile={isMobile}
           />
@@ -83,13 +143,27 @@ function App() {
         />
       )}
 
-      {showFilterModal && (
-        <IngredientsModal
-          allIngredients={allIngredients}
-          toggleFilterModal={toggleFilterModal}
-          setAllIngredients={setAllIngredients}
+      {showProfileModal && (
+        <ProfileModal
+          toggleProfileModal={toggleProfileModal}
+          walletBalance={balance}
           isMobile={isMobile}
         />
+      )}
+
+      {showLoginModal && (
+        <LoginModal
+        toggleLoginModal={toggleLoginModal}
+        logintoPortis={loginToPortis}
+        isMobile={isMobile}
+        />
+      )}
+
+      {showSettingModal && (
+        <SettingsModal
+          toggleSettingModal={toggleSettingModal}
+          isMobile={isMobile}
+          />
       )}
 
       <TaskBar

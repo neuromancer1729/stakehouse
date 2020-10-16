@@ -30,3 +30,25 @@
         }
     }
 }
+
+.loginModal{
+    width:100%;
+    display:flex;
+    .loginRight{
+        width:49%;
+        padding: 90px 15px 0px 0px;
+        text-align: center;
+    }
+    .loginMiddle{
+        width: 2%;
+        height: 100%;
+    }
+    .loginLeft{
+        width:49%;
+        padding: 90px 15px 0px 0px;
+        text-align: center;
+        .loginText{
+            margin-bottom:50px;
+        }
+    }
+}
