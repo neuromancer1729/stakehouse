@@ -15,8 +15,8 @@ const FilterResult = styled.span`
   margin-top: 5px;
 `;
 
-const Recipes = ({
-  recipes,
+const Houses = ({
+  houses,
   setSelectedRecipe,
   openModal,
   openProfileModal,
@@ -27,13 +27,8 @@ const Recipes = ({
   filter,
   isMobile,
 }) => {
-  const filteredRecipes =
-    filter.length > 0
-      ? recipes.filter((r) =>
-          r.ingredients.some((i) => filter.includes(i.Ingredientes)),
-        )
-      : recipes;
-
+  
+  debugger;
   const boxProps = {
     defaultPosition: isMobile
       ? { x: 0, y: 50 }
@@ -87,10 +82,26 @@ const Recipes = ({
           maxHeight: '50vh',
         }}
       >
+        <Wrapper >
+          <Wrapper style={{width: '100%', 'margin-bottom': '20px', fontSize: 20, fontWeight: 600}}
+          >
+            <span>Joined Houses</span>
+          </Wrapper>
+          
+          <Recipe key={"createRoom"} name={"Create new house"} icon={"keys"} />
+          
+        </Wrapper>
+        <hr/>
         <Wrapper>
-          {Object.values(filteredRecipes).map(({ name, slug }) => (
-            <Recipe key={name} name={name} slug={slug} />
-          ))}
+          <Wrapper style={{width: '100%', 'margin-bottom': '20px', fontSize: 20, fontWeight: 600}}>
+            <span>Recommended houses</span>
+          </Wrapper>
+          
+          { houses && houses.map((item) => {
+            return (
+            <Recipe key={item.key} name={item.name} description={item.description} icon={item.icon}/>
+            )
+})}
         </Wrapper>
       </Frame>
       {filter.length > 0 && (
@@ -100,4 +111,4 @@ const Recipes = ({
   );
 };
 
-export default Recipes;
+export default Houses;

@@ -15,7 +15,7 @@ const SettingsModal =({
         <Modal
           {...boxProps}
           style={{ top: 0 }}
-          icon="bat_exec"
+          icon="folder_settings"
           title="Settings"
           closeModal={() => toggleSettingModal(false)}
         >

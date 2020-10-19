@@ -7,7 +7,7 @@ import '../src/style.scss'
 import Portis from '@portis/web3';
 import Web3 from 'web3';
 
-import { Recipes, RecipeModal, TaskList, LoginModal, ProfileModal } from './components';
+import { Houses, RecipeModal, TaskList, LoginModal, ProfileModal } from './components';
 import { useRecipes } from './components/RecipeContext';
 import SettingsModal from './components/SettingsModal';
 
@@ -30,8 +30,7 @@ function App() {
     allIngredients,
     selectedRecipe,
     setSelectedRecipe,
-    sheetId,
-    updateRecipes,
+    houses,
   } = useRecipes();
 
   const portis = new Portis('72f8e659-ecc9-4a33-8357-c66bd3f71685', 'mainnet');
@@ -110,9 +109,9 @@ function isUserLoggedIn() {
       <Style />
       
       <Router>
-        {Object.keys(recipes).length > 0 && (
-          <Recipes
-            recipes={recipes}
+        
+          <Houses
+            houses={houses}
             openModal={openModal}
             setSelectedRecipe={setSelectedRecipe}
             openProfileModal={openProfileModal}
@@ -123,7 +122,6 @@ function isUserLoggedIn() {
             filter={filter}
             isMobile={isMobile}
           />
-        )}
         <Switch>
           <Route path={`${process.env.PUBLIC_URL}/:recipeSlug`}>
             <RecipeModal
@@ -169,10 +167,9 @@ function isUserLoggedIn() {
       <TaskBar
         list={
           <TaskList
-            spreadsheetID={sheetId}
-            onUpdate={() => {
-              updateRecipes();
-            }}
+          openLoginModal={toggleLoginModal}
+          isLoggedin={isLoggedin}
+          logout={logout}
           />
         }
       />

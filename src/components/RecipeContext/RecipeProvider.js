@@ -7,6 +7,7 @@ import localforage from 'localforage';
 import RecipeContext from './RecipeContext';
 import Loading from './Loading';
 import slugify from '../../utils/slugify';
+import firebase from '../../firebase';
 
 const SPREADSHEET_ID = '1Uou8R5Bgrdl9M8ykKZeSj5MAl_huugiG3rRIQyMtxvI';
 
@@ -24,6 +25,7 @@ const RecipeProvider = ({ children }) => {
   const [selectedRecipe, setSelectedRecipe] = useState({});
   const [loading, toggleLoading] = useState(false);
   const [alertData, setAlertData] = useState(undefined);
+  const [houses, setHouses] = useState([]);
 
   function getDataFromSpreadsheet() {
     toggleLoading(true);
@@ -84,7 +86,9 @@ const RecipeProvider = ({ children }) => {
     async function fetchData() {
       const recipes = await recipesDB.getItem('recipes');
       const ingredients = await ingredientsDB.getItem('ingredients');
-
+      const houses = await gethouses();
+      debugger;
+      setHouses(houses);
       if (!recipes) {
         getDataFromSpreadsheet();
       } else {
@@ -96,51 +100,20 @@ const RecipeProvider = ({ children }) => {
     fetchData();
   }, []);
 
-  const isServiceWorkerInitialized = useSelector(
-    (state) => state.serviceWorkerInitialized,
-  );
-  const isServiceWorkerUpdated = useSelector(
-    (state) => state.serviceWorkerUpdated,
-  );
-  const serviceWorkerRegistration = useSelector(
-    (state) => state.serviceWorkerRegistration,
-  );
+async function gethouses(){
+  debugger;
+  let houses = [];
+  const db = firebase.firestore();
+  await db.collection("Houses").get().then((querySnapshot) => {
+    querySnapshot.forEach(function(doc) {
+      houses.push({name: doc.data().name, description: doc.data().description, key:doc.id,icon: doc.data().icon});
+  });
+});
+console.log(houses);
+  return houses;
+}
 
-  useEffect(() => {
-    if (isServiceWorkerInitialized) {
-      setAlertData({
-        message: '95 Recipes has been saved for offline use.',
-        type: 'info',
-        title: 'Offile usage',
-        closeAlert: () => setAlertData(undefined),
-      });
-    }
-  }, [isServiceWorkerInitialized]);
 
-  useEffect(() => {
-    const updateServiceWorker = () => {
-      const registrationWaiting = serviceWorkerRegistration.waiting;
-
-      if (registrationWaiting) {
-        registrationWaiting.postMessage({ type: 'SKIP_WAITING' });
-
-        registrationWaiting.addEventListener('statechange', (e) => {
-          if (e.target.state === 'activated') {
-            window.location.reload();
-          }
-        });
-      }
-    };
-
-    if (isServiceWorkerUpdated) {
-      setAlertData({
-        message: 'New version available! Click here to update',
-        type: 'warning',
-        title: 'Update',
-        closeAlert: () => updateServiceWorker(),
-      });
-    }
-  }, [isServiceWorkerUpdated, serviceWorkerRegistration.waiting]);
 
   function getRecipeFromSlug(slug) {
     return recipes.find((r) => r.slug === slug) || {};
@@ -152,6 +125,7 @@ const RecipeProvider = ({ children }) => {
         allIngredients,
         getRecipeFromSlug,
         recipes,
+        houses,
         selectedRecipe,
         setSelectedRecipe,
         sheetId: SPREADSHEET_ID,

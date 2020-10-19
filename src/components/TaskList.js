@@ -26,24 +26,23 @@ const Link = styled.a.attrs({
   color: inherit;
 `;
 
-const TaskList = ({ spreadsheetID, onUpdate }) => (
+const TaskList = ({ openLoginModal, isLoggedin, logout }) => (
   <List>
-    <ListItem icon="file_find" onClick={onUpdate}>
-      Update
-    </ListItem>
-    <ListItem icon="folder_file">
-      <Link
-        href={`https://docs.google.com/spreadsheets/d/${spreadsheetID}/edit?usp=sharing`}
-      >
-        Spreadsheet
-      </Link>
-    </ListItem>
+    { !isLoggedin && (
+              <List.Item icon="progman_33" onClick={() => openLoginModal(true)}>
+                Login
+              </List.Item>)
+              }
+              { isLoggedin && (
+                <List.Item icon="progman_39" onClick={() => logout()}> 
+                Logout
+                </List.Item>
+              )
+
+              }
     <List.Divider />
-    <ListItem smallIcon icon="file_pen" onClick={onUpdate}>
-      <Link href="https://ggdaltoso.dev">My Blog</Link>
-    </ListItem>
     <ListItem icon="computer_3">
-      <Link href="https://github.com/ggdaltoso/95Recipes">Github</Link>
+      <Link href="https://github.com/neuromancer1729/stakehouse">Github</Link>
     </ListItem>
   </List>
 );

@@ -21,16 +21,16 @@ const Name = styled.span`
   word-break: break-word;
 `;
 
-const Recipe = ({ name, slug, ...rest }) => {
+const Recipe = ({ name, description,icon, ...rest }) => {
   const history = useHistory();
 
   return (
     <StyledRecipe
-      onClick={() => history.push(`${process.env.PUBLIC_URL}/${slug}`)}
       {...rest}
     >
-      <Icon name="file_text" style={{ marginBottom: 4 }} />
-      <Name>{`${name}.txt`}</Name>
+      <Icon name={icon} style={{ marginBottom: 4 }} />
+      <Name>{`${name}`}</Name>
+      {description && <Name>{description}</Name>}
     </StyledRecipe>
   );
 };

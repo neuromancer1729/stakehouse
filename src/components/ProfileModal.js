@@ -15,7 +15,7 @@ const ProfileModal = ({
     <Modal
       {...boxProps}
       style={{ top: 0 }}
-      icon="bat_exec"
+      icon="user"
       title="Profile"
       closeModal={() => toggleProfileModal(false)}
     >
@@ -28,7 +28,7 @@ const ProfileModal = ({
           <div className="mainModal">
             <div className="WalletFunds">
                   <span className="wallet-header">Wallet Funds</span>
-        <span className="wallet-amount">{walletBalance} ETH</span>
+        <span className="wallet-amount">{walletBalance > 0 ? (walletBalance/10^18): walletBalance} ETH</span>
             </div>
             <div className="AddFunds">
               <span className="addFunds-header">Add funds</span>
