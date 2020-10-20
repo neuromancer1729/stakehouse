@@ -42,6 +42,7 @@ function App() {
   const [showLoginModal, toggleLoginModal] = useState(false);
   const [showSettingModal, toggleSettingModal] = useState(false);
   const [balance, setBalance] = useState(0);
+  const [email, setEmail] = useState();
 
 
   function openProfileModal(){
@@ -70,8 +71,9 @@ function isUserLoggedIn() {
     setLogin(false);
   }
 
-  portis.onLogin((walletAddress) => {
+  portis.onLogin((walletAddress, email, reputation) => {
     toggleLoginModal(false);
+    setEmail(email);
     setLogin(true);
     getAccounts();
     
@@ -160,6 +162,7 @@ function isUserLoggedIn() {
       {showSettingModal && (
         <SettingsModal
           toggleSettingModal={toggleSettingModal}
+          email={email}
           isMobile={isMobile}
           />
       )}

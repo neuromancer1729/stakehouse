@@ -87,7 +87,6 @@ const RecipeProvider = ({ children }) => {
       const recipes = await recipesDB.getItem('recipes');
       const ingredients = await ingredientsDB.getItem('ingredients');
       const houses = await gethouses();
-      debugger;
       setHouses(houses);
       if (!recipes) {
         getDataFromSpreadsheet();
@@ -101,7 +100,6 @@ const RecipeProvider = ({ children }) => {
   }, []);
 
 async function gethouses(){
-  debugger;
   let houses = [];
   const db = firebase.firestore();
   await db.collection("Houses").get().then((querySnapshot) => {

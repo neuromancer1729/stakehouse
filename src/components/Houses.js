@@ -28,7 +28,6 @@ const Houses = ({
   isMobile,
 }) => {
   
-  debugger;
   const boxProps = {
     defaultPosition: isMobile
       ? { x: 0, y: 50 }
