@@ -4,6 +4,7 @@
   "homepage": "",
   "private": true,
   "dependencies": {
+    "@daily-co/daily-js": "^0.9.994",
     "@portis/web3": "^2.0.0-beta.59",
     "@react95/core": "^2.10.0",
     "@testing-library/jest-dom": "^5.9.0",

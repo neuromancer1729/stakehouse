@@ -30,8 +30,9 @@ const SettingsModal =({
               }}
             >              
               <img src={"https://www.gravatar.com/avatar/" + md5(emailText) + "?s=100"} />
-              <span className="userName">{emailText}</span>
+              
             </div>
+            <span className="userName">{emailText}</span>
         </Modal>
       );
     };

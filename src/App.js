@@ -6,6 +6,7 @@ import 'react-medium-image-zoom/dist/styles.css';
 import '../src/style.scss'
 import Portis from '@portis/web3';
 import Web3 from 'web3';
+import firebase from './firebase';
 
 import { Houses, RecipeModal, TaskList, LoginModal, ProfileModal } from './components';
 import { useRecipes } from './components/RecipeContext';
@@ -33,7 +34,7 @@ function App() {
     houses,
   } = useRecipes();
 
-  const portis = new Portis('72f8e659-ecc9-4a33-8357-c66bd3f71685', 'mainnet');
+  const portis = new Portis('72f8e659-ecc9-4a33-8357-c66bd3f71685', 'mainnet', {scope: ["email", "reputation"]});
   const web3 = new Web3(portis.provider);
   const [isLoggedin, setLogin] = useState(false);
 
@@ -43,6 +44,7 @@ function App() {
   const [showSettingModal, toggleSettingModal] = useState(false);
   const [balance, setBalance] = useState(0);
   const [email, setEmail] = useState();
+  const [walletAddress, setWalletAddress] = useState();
 
 
   function openProfileModal(){
@@ -74,13 +76,47 @@ function isUserLoggedIn() {
   portis.onLogin((walletAddress, email, reputation) => {
     toggleLoginModal(false);
     setEmail(email);
+    setWalletAddress(walletAddress);
     setLogin(true);
+    createUser(walletAddress.toLowerCase(), email, reputation);
     getAccounts();
     
   })
 
+  function createUser(walletAddress, email, reputation){
+    const db = firebase.firestore();
+    db.collection("Users").doc(walletAddress).get().then(function(doc){
+          if(!doc.exists){
+              db.collection("Users").doc(walletAddress).set({
+                email: email,
+                reputation: reputation,
+              }).then(function(doc) {
+                  //set success message here if required.
+              }).catch(function(doc) {
+                  //set error message here if required.
+              })
+          }
+    })
+  }
+
+
+  function getUser(walletAddress) {
+    const db = firebase.firestore();
+    db.collection("Users").doc(walletAddress).get().then(function(doc) {
+        setEmail(doc.data().email);
+        setWalletAddress(walletAddress);
+    });
+
+    getUserHouses(walletAddress);
+  }
+
+  function getUserHouses(walletAddress){
+
+  }
+
   function getAccounts(){
     web3.eth.getAccounts((error, accounts) => {
+      getUser(accounts[0].toLowerCase());
       checkBalance(accounts[0]);  
     });
   }
@@ -92,7 +128,12 @@ function isUserLoggedIn() {
 
   portis.onLogout((walletAddress) => {
     setLogin(false);
+    setEmail(undefined); setWalletAddress(undefined);
   })
+
+  function joinRoom(key){
+
+  }
 
 
 
@@ -119,6 +160,8 @@ function isUserLoggedIn() {
             openProfileModal={openProfileModal}
             openSettingModal={toggleSettingModal}
             openLoginModal={toggleLoginModal}
+            joinRoom={joinRoom}
+            createRoom={null}
             isLoggedin={isLoggedin}
             logout={logout}
             filter={filter}

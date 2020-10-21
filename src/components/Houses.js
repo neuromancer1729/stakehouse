@@ -22,6 +22,8 @@ const Houses = ({
   openProfileModal,
   openSettingModal,
   openLoginModal,
+  createRoom,
+  joinRoom,
   isLoggedin,
   logout,
   filter,
@@ -87,7 +89,7 @@ const Houses = ({
             <span>Joined Houses</span>
           </Wrapper>
           
-          <Recipe key={"createRoom"} name={"Create new house"} icon={"keys"} />
+          <Recipe key={"createRoom"} name={"Create new house"} icon={"keys"} onClick={createRoom} />
           
         </Wrapper>
         <hr/>
@@ -98,7 +100,7 @@ const Houses = ({
           
           { houses && houses.map((item) => {
             return (
-            <Recipe key={item.key} name={item.name} description={item.description} icon={item.icon}/>
+            <Recipe key={item.key} name={item.name} description={item.description} icon={item.icon} onClick={joinRoom}/>
             )
 })}
         </Wrapper>
