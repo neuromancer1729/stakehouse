@@ -21,12 +21,12 @@ const Name = styled.span`
   word-break: break-word;
 `;
 
-const Recipe = ({ key,name, description,icon, onClick, ...rest }) => {
+const Recipe = ({ key,name, description,icon,roomurl, onClick, ...rest }) => {
   const history = useHistory();
 
   return (
     <StyledRecipe
-    onClick={() => onClick && onClick(key)}
+    onClick={() => onClick && onClick(key,roomurl)}
       {...rest}
     >
       <Icon name={icon} style={{ marginBottom: 4 }} />

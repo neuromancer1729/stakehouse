@@ -104,7 +104,7 @@ async function gethouses(){
   const db = firebase.firestore();
   await db.collection("Houses").get().then((querySnapshot) => {
     querySnapshot.forEach(function(doc) {
-      houses.push({name: doc.data().name, description: doc.data().description, key:doc.id,icon: doc.data().icon});
+      houses.push({name: doc.data().name, description: doc.data().description, key:doc.id,icon: doc.data().icon, roomurl: doc.data().roomurl});
   });
 });
 console.log(houses);

@@ -131,11 +131,9 @@ function isUserLoggedIn() {
     setEmail(undefined); setWalletAddress(undefined);
   })
 
-  function joinRoom(key){
+  function joinRoom(key,roomurl){
 
   }
-
-
 
   function openModal() {
     toggleModal(true);
