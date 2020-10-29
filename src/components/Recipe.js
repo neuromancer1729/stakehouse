@@ -1,7 +1,6 @@
 import React from 'react';
 import { Icon } from '@react95/core';
 import styled from '@xstyled/styled-components';
-import { useHistory } from 'react-router-dom';
 
 const StyledRecipe = styled.div`
   display: flex;
@@ -21,18 +20,29 @@ const Name = styled.span`
   word-break: break-word;
 `;
 
-const Recipe = ({ key,name, description,icon,roomurl, onClick, ...rest }) => {
-  const history = useHistory();
-
+const Recipe = ({id, name, description,icon,roomurl, onClick, isLoggedin, openLoginModal, ...rest }) => {
   return (
+    isLoggedin ?
+  (
     <StyledRecipe
-    onClick={() => onClick && onClick(key,roomurl)}
+    onClick={() => onClick && onClick(name,id,roomurl)}
       {...rest}
     >
       <Icon name={icon} style={{ marginBottom: 4 }} />
       <Name>{`${name}`}</Name>
       {description && <Name>{description}</Name>}
     </StyledRecipe>
+  ) :
+  (
+    <StyledRecipe
+    onClick={() => openLoginModal && openLoginModal(true)}
+      {...rest}
+    >
+      <Icon name={icon} style={{ marginBottom: 4 }} />
+      <Name>{`${name}`}</Name>
+      {description && <Name>{description}</Name>}
+    </StyledRecipe>
+  )
   );
 };
 

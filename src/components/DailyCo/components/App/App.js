@@ -16,11 +16,10 @@ const STATE_JOINED = 'STATE_JOINED';
 const STATE_LEAVING = 'STATE_LEAVING';
 const STATE_ERROR = 'STATE_ERROR';
 
-export default function App() {
+export default function App(props) {
   const [appState, setAppState] = useState(STATE_IDLE);
   const [roomUrl, setRoomUrl] = useState(null);
   const [callObject, setCallObject] = useState(null);
-
   /**
    * Creates a new call room.
    */
@@ -50,7 +49,12 @@ export default function App() {
     setRoomUrl(url);
     setCallObject(newCallObject);
     setAppState(STATE_JOINING);
-    newCallObject.join({ url });
+    newCallObject.join({ url }).then().catch((error) => {
+      if(error === 'This room is no longer available'){
+        createCall().then((url) => startJoiningCall(url));
+      }
+    });
+    props.updateRoomUrl(props.roomId, url);
   }, []);
 
   /**
@@ -69,16 +73,17 @@ export default function App() {
       setAppState(STATE_LEAVING);
       callObject.leave();
     }
-  }, [callObject, appState]);
+    props.toggleCallModal(false);
+  }, [callObject, appState, props]);
 
   /**
    * If a room's already specified in the page's URL when the component mounts,
    * join the room.
    */
   useEffect(() => {
-    const url = roomUrlFromPageUrl();
+    const url = props.existingRoomURL;
     url && startJoiningCall(url);
-  }, [startJoiningCall]);
+  }, [startJoiningCall, props]);
 
   /**
    * Update the page's URL to reflect the active call when roomUrl changes.
@@ -120,11 +125,9 @@ export default function App() {
           setAppState(STATE_JOINED);
           break;
         case 'left-meeting':
-          callObject.destroy().then(() => {
             setRoomUrl(null);
             setCallObject(null);
             setAppState(STATE_IDLE);
-          });
           break;
         case 'error':
           setAppState(STATE_ERROR);

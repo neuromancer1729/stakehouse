@@ -8,9 +8,10 @@ import Portis from '@portis/web3';
 import Web3 from 'web3';
 import firebase from './firebase';
 
-import { Houses, RecipeModal, TaskList, LoginModal, ProfileModal } from './components';
+import { Houses, RecipeModal, TaskList, LoginModal, ProfileModal, CallModal } from './components';
 import { useRecipes } from './components/RecipeContext';
 import SettingsModal from './components/SettingsModal';
+
 
 const isMobile =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -27,7 +28,6 @@ const Style = createGlobalStyle`
 
 function App() {
   const {
-    recipes,
     allIngredients,
     selectedRecipe,
     setSelectedRecipe,
@@ -45,6 +45,10 @@ function App() {
   const [balance, setBalance] = useState(0);
   const [email, setEmail] = useState();
   const [walletAddress, setWalletAddress] = useState();
+  const [roomName, setRoomName] = useState();
+  const [roomId, setRoomId] = useState();
+  const [existingRoomURL, setExistingRoomURL] = useState();
+  const [showCallModal, toggleCallModal] = useState(false);
 
 
   function openProfileModal(){
@@ -99,6 +103,13 @@ function isUserLoggedIn() {
     })
   }
 
+  function updateRoomUrl(key, roomURL){
+    const db = firebase.firestore();
+    db.collection("Houses").doc(key).update({
+      roomurl: roomURL
+    })
+  }
+
 
   function getUser(walletAddress) {
     const db = firebase.firestore();
@@ -131,8 +142,11 @@ function isUserLoggedIn() {
     setEmail(undefined); setWalletAddress(undefined);
   })
 
-  function joinRoom(key,roomurl){
-
+  function joinRoom(roomName,key,roomurl){
+    setRoomName(roomName);
+    setRoomId(key);
+    setExistingRoomURL(roomurl);
+    toggleCallModal(true);
   }
 
   function openModal() {
@@ -204,6 +218,17 @@ function isUserLoggedIn() {
         <SettingsModal
           toggleSettingModal={toggleSettingModal}
           email={email}
+          isMobile={isMobile}
+          />
+      )}
+
+      {showCallModal && (
+        <CallModal
+          roomName={roomName}
+          roomId={roomId}
+          existingRoomURL={existingRoomURL}
+          toggleCallModal={toggleCallModal}
+          updateRoomUrl={updateRoomUrl}
           isMobile={isMobile}
           />
       )}

@@ -100,7 +100,7 @@ const Houses = ({
           
           { houses && houses.map((item) => {
             return (
-            <Recipe key={item.key} name={item.name} description={item.description} icon={item.icon} roomurl={item.roomurl} onClick={joinRoom}/>
+            <Recipe id={item.key} name={item.name} description={item.description} icon={item.icon} roomurl={item.roomurl} onClick={joinRoom} isLoggedin={isLoggedin} openLoginModal={openLoginModal}/>
             )
 })}
         </Wrapper>

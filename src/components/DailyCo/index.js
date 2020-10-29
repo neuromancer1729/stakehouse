@@ -6,13 +6,19 @@ import BrowserUnsupported from './components/BrowserUnsupported/BrowserUnsupport
 import DailyIframe from '@daily-co/daily-js';
 
 const DailyCo = ({
-  element,
+  roomName,
+  roomId,
+  existingRoomURL,
+  toggleCallModal,
+  updateRoomUrl,
 }) => {
   return (  
-          ReactDOM.render(
-            DailyIframe.supportedBrowser().supported ? <App /> : <BrowserUnsupported />,
-            document.getElementById(element)
-          )
+            DailyIframe.supportedBrowser().supported ? <App  
+            roomName={roomName} 
+            roomId={roomId} 
+            existingRoomURL={existingRoomURL}
+            toggleCallModal={toggleCallModal} 
+            updateRoomUrl={updateRoomUrl} /> : <BrowserUnsupported />
   )
 }
 
