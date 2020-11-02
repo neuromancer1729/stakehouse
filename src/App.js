@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import  { createGlobalStyle } from '@xstyled/styled-components';
 import { TaskBar } from '@react95/core';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import 'react-medium-image-zoom/dist/styles.css';
 import '../src/style.scss'
 import Portis from '@portis/web3';
 import Web3 from 'web3';
 import firebase from './firebase';
 
-import { Houses, RecipeModal, TaskList, LoginModal, ProfileModal, CallModal } from './components';
+import { Houses, TaskList, LoginModal, ProfileModal, CallModal } from './components';
 import { useRecipes } from './components/RecipeContext';
 import SettingsModal from './components/SettingsModal';
 
@@ -28,17 +28,14 @@ const Style = createGlobalStyle`
 
 function App() {
   const {
-    allIngredients,
-    selectedRecipe,
-    setSelectedRecipe,
     houses,
+    setHouseUpdated,
+    houseupdated,
   } = useRecipes();
-
+  
   const portis = new Portis('72f8e659-ecc9-4a33-8357-c66bd3f71685', 'mainnet', {scope: ["email", "reputation"]});
   const web3 = new Web3(portis.provider);
   const [isLoggedin, setLogin] = useState(false);
-
-  const [showModal, toggleModal] = useState(false);
   const [showProfileModal, toggleProfileModal] = useState(false);
   const [showLoginModal, toggleLoginModal] = useState(false);
   const [showSettingModal, toggleSettingModal] = useState(false);
@@ -67,6 +64,7 @@ function isUserLoggedIn() {
   });
  return isLoggedin; 
 }
+
 
   function loginToPortis(){
     portis.provider.enable();
@@ -108,6 +106,7 @@ function isUserLoggedIn() {
     db.collection("Houses").doc(key).update({
       roomurl: roomURL
     })
+    setHouseUpdated(houseupdated + 1)
   }
 
 
@@ -149,15 +148,6 @@ function isUserLoggedIn() {
     toggleCallModal(true);
   }
 
-  function openModal() {
-    toggleModal(true);
-  }
-
-  function closeModal() {
-    toggleModal(false);
-  }
-
-  const filter = allIngredients.filter((t) => t.checked).map((i) => i.name);
 
   return (
     <>
@@ -167,8 +157,6 @@ function isUserLoggedIn() {
         
           <Houses
             houses={houses}
-            openModal={openModal}
-            setSelectedRecipe={setSelectedRecipe}
             openProfileModal={openProfileModal}
             openSettingModal={toggleSettingModal}
             openLoginModal={toggleLoginModal}
@@ -176,27 +164,9 @@ function isUserLoggedIn() {
             createRoom={null}
             isLoggedin={isLoggedin}
             logout={logout}
-            filter={filter}
             isMobile={isMobile}
           />
-        <Switch>
-          <Route path={`${process.env.PUBLIC_URL}/:recipeSlug`}>
-            <RecipeModal
-              selectedRecipe={selectedRecipe}
-              closeModal={closeModal}
-              isMobile={isMobile}
-            />
-          </Route>
-        </Switch>
       </Router>
-
-      {showModal && (
-        <RecipeModal
-          selectedRecipe={selectedRecipe}
-          closeModal={closeModal}
-          isMobile={isMobile}
-        />
-      )}
 
       {showProfileModal && (
         <ProfileModal

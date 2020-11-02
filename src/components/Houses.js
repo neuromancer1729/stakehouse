@@ -17,8 +17,6 @@ const FilterResult = styled.span`
 
 const Houses = ({
   houses,
-  setSelectedRecipe,
-  openModal,
   openProfileModal,
   openSettingModal,
   openLoginModal,
@@ -26,7 +24,6 @@ const Houses = ({
   joinRoom,
   isLoggedin,
   logout,
-  filter,
   isMobile,
 }) => {
   
@@ -105,9 +102,6 @@ const Houses = ({
 })}
         </Wrapper>
       </Frame>
-      {filter.length > 0 && (
-        <FilterResult>Filter: {filter.join(', ')}</FilterResult>
-      )}
     </Modal>
   );
 };

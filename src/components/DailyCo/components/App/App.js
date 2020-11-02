@@ -26,8 +26,11 @@ export default function App(props) {
   const createCall = useCallback(() => {
     setAppState(STATE_CREATING);
     return api
-      .createRoom()
-      .then((room) => room.url)
+      .createRoom(props.roomId)
+      .then((room) => { 
+        props.updateRoomUrl(props.roomId, room.url);
+        return room.url
+      })
       .catch((error) => {
         console.log('Error creating room', error);
         setRoomUrl(null);
@@ -54,7 +57,6 @@ export default function App(props) {
         createCall().then((url) => startJoiningCall(url));
       }
     });
-    props.updateRoomUrl(props.roomId, url);
   }, []);
 
   /**
