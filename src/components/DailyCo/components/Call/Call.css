@@ -5,18 +5,17 @@
 
 .large-tiles {
   height: calc(100% - 132.5px);
-  width: 80%;
+  width: 100%;
   position: relative;
   left: 50%;
   transform: translate(-50%, 0);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
   align-items: center;
-  overflow-y: scroll;
 }
 
 .small-tiles {
   height: 132.5px; /* Video height + 10px padding either side */
-  display: flex;
+  display: none;
   align-items: center;
 }

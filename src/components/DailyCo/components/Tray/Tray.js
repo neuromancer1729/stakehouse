@@ -92,26 +92,26 @@ export default function Tray(props) {
 
   return (
     <div className="tray">
-      <TrayButton
+      {/* <TrayButton
         type={TYPE_MUTE_CAMERA}
         disabled={props.disabled}
         highlighted={isCameraMuted}
         onClick={toggleCamera}
-      />
+      /> */}
       <TrayButton
         type={TYPE_MUTE_MIC}
         disabled={props.disabled}
         highlighted={isMicMuted}
         onClick={toggleMic}
       />
-      {DailyIframe.supportedBrowser().supportsScreenShare && (
+      {/* {DailyIframe.supportedBrowser().supportsScreenShare && (
         <TrayButton
           type={TYPE_SCREEN}
           disabled={props.disabled}
           highlighted={isSharingScreen}
           onClick={toggleSharingScreen}
         />
-      )}
+      )} */}
       <TrayButton
         type={TYPE_LEAVE}
         disabled={props.disabled}

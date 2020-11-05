@@ -14,7 +14,6 @@ const RecipeProvider = ({ children }) => {
 
   useEffect(() => {
     async function fetchData() {
-      debugger;
       toggleLoading(true);
       const houses = await gethouses();
       setHouses(houses);
@@ -40,6 +39,7 @@ async function gethouses(){
     <RecipeContext.Provider
       value={{
         houses,
+        setHouses,
         houseupdated,
         setHouseUpdated,
       }}

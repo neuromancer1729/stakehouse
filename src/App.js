@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import  { createGlobalStyle } from '@xstyled/styled-components';
 import { TaskBar } from '@react95/core';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -47,7 +47,6 @@ function App() {
   const [existingRoomURL, setExistingRoomURL] = useState();
   const [showCallModal, toggleCallModal] = useState(false);
 
-
   function openProfileModal(){
     if(isLoggedin) {
        toggleProfileModal(true); }
@@ -57,13 +56,13 @@ function App() {
 
   }
 
-function isUserLoggedIn() {
-  portis.isLoggedIn().then(({ error, result }) => {
-    setLogin(result);
-    getAccounts();
-  });
- return isLoggedin; 
-}
+// function isUserLoggedIn() {
+//   portis.isLoggedIn().then(({ error, result }) => {
+//     setLogin(result);
+//     getAccounts();
+//   });
+//  return isLoggedin; 
+// }
 
 
   function loginToPortis(){
@@ -82,7 +81,6 @@ function isUserLoggedIn() {
     setLogin(true);
     createUser(walletAddress.toLowerCase(), email, reputation);
     getAccounts();
-    
   })
 
   function createUser(walletAddress, email, reputation){
@@ -116,12 +114,6 @@ function isUserLoggedIn() {
         setEmail(doc.data().email);
         setWalletAddress(walletAddress);
     });
-
-    getUserHouses(walletAddress);
-  }
-
-  function getUserHouses(walletAddress){
-
   }
 
   function getAccounts(){
@@ -146,8 +138,31 @@ function isUserLoggedIn() {
     setRoomId(key);
     setExistingRoomURL(roomurl);
     toggleCallModal(true);
+    addUserHouse(key);
   }
 
+  function addUserHouse(roomkey)
+  {
+    const db = firebase.firestore();
+    db.collection("UserHouses").where("userId", "==", walletAddress).where("houseId", "==", roomkey)
+    .get()
+    .then(function(doc) {
+       if(!doc.exists)
+       {
+        db.collection("UserHouses").add({
+          userId: walletAddress,
+          houseId: roomkey,
+        }).then(function(doc) {
+            //set success message here if required.
+        }).catch(function(doc) {
+            //set error message here if required.
+        })
+       }
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+  }
 
   return (
     <>
@@ -165,6 +180,7 @@ function isUserLoggedIn() {
             isLoggedin={isLoggedin}
             logout={logout}
             isMobile={isMobile}
+            walletAddress={walletAddress}
           />
       </Router>
 
