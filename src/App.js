@@ -33,7 +33,7 @@ function App() {
     houseupdated,
   } = useRecipes();
   
-  const portis = new Portis('72f8e659-ecc9-4a33-8357-c66bd3f71685', 'mainnet', {scope: ["email", "reputation"]});
+  const portis = new Portis('4e2f6406-5a2a-4670-915b-08e9d3493d2b', 'mainnet', {scope: ["email", "reputation"]});
   const web3 = new Web3(portis.provider);
   const [isLoggedin, setLogin] = useState(false);
   const [showProfileModal, toggleProfileModal] = useState(false);
